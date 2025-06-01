@@ -2,27 +2,45 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>{% block title %}Pizzeria{% endblock %}</title>
+  <title>{% block title %}GoodPizza{% endblock %}</title>
   {% load static %}
   <link rel="stylesheet" href="{% static 'pizzeria/style.css' %}">
 </head>
 <body>
 
-  <header>
-    <h1><a href="{% url 'index' %}">Pizzeria</a></h1>
-    <nav>
-      <ul>
-        <li><a href="{% url 'index' %}">Home</a></li>
-      </ul>
-    </nav>
-  </header>
+    <header class="site-header">
+        <div class="container">
+          <span class="brand">GoodPizza</span>
+          <nav class="top-nav">
+            {% if user.is_authenticated %}
+              <h1><span class="welcome">Welcome, {{ user.first_name }}!</span></h1>
+              <a href="{% url 'index' %}">Menu</a>
+              <a href="{% url 'index' %}">My Account</a>
+              <a href="{% url 'index' %}">My Cart</a>
+              <a href="{% url 'index' %}">My Orders</a>
+              {% if user.is_staff %}
+                <a href="{% url 'index' %}">Manage Orders</a>
+              {% endif %}
+              {% if user.is_admin %}
+                <a href="{% url 'index' %}">Admin</a>
+              {% endif %}
+              <a href="{% url 'index' %}">Log out</a>
+            {% else %}
+              <h1><span class="welcome">Welcome!</span></h1>
+              <a href="{% url 'index' %}">Menu</a>
+              <a href="{% url 'index' %}">Log in</a>
+              <a href="{% url 'index' %}">Register</a>
+            {% endif %}
+          </nav>
+        </div>
+      </header>
 
   <main>
     {% block content %}{% endblock %}
   </main>
 
   <footer>
-    <p>&copy; {{ now|date:"Y" }} Pizzeria. All rights reserved.</p>
+    <p>&copy; GoodPizza. All rights reserved.</p>
   </footer>
 
 </body>

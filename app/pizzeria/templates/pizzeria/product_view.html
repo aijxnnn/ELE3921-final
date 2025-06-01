@@ -21,7 +21,7 @@
 
   {% for item in items %}
     <label>
-      <input type="radio" name="size" value="{{ item.size }}" {% if forloop.first %}checked{% endif %}> 
+      <input type="radio" name="size" value="{{ item.size }}" data-price="{{ item.price }}" {% if forloop.first %}checked{% endif %}> 
         {{ item.size|capfirst }} – {{ item.price }} kr
     </label><br>
   {% endfor %}
@@ -39,7 +39,8 @@
 
   {% endif %}
   <input type="hidden" name="item_name" value="{{ item_name }}">
-  <button type="submit">Add to Cart</button>
+  <input type="hidden" id="total-price" value="0">
+  <button type="submit">Add to Cart for <span id="total-price-text"></span></button>
 </form>
 
 <p><a href="{% url 'index' %}">Back to Menu</a></p>
@@ -53,15 +54,18 @@
     const toppingPrices = JSON.parse(
       document.getElementById("topping-prices-data").textContent
     );
-  
+    // updating the toping prices depending on the size of pizza
     function updateToppingPrices(selectedSize) {
       document.querySelectorAll('[data-topping-id]').forEach(span => {
         const id = span.dataset.toppingId;
-        const price = toppingPrices[id]?.[selectedSize];
-        span.innerText = price !== undefined ? `+${price} kr` : '';
-      });
+        let price;
+        if (toppingPrices[id]) {
+            price = toppingPrices[id][selectedSize];
+}
+        span.innerText = `+${price} kr`;});
+        updateTotalPrice(selectedSize);
     }
-  
+
     document.addEventListener("DOMContentLoaded", () => {
       const radios = document.querySelectorAll('input[name="size"]');
       radios.forEach(radio => {
@@ -70,6 +74,37 @@
         });
         if (radio.checked) updateToppingPrices(radio.value);
       });
+  
+    document.querySelectorAll('input[name="extra_toppings"]').forEach(choice => {
+        choice.addEventListener('change', () => 
+        {const selectedSize = document.querySelector('input[name="size"]:checked')?.value;
+          updateTotalPrice(selectedSize);
+        });
     });
+    });
+
+    // dynamic total price on the add to cart button
+
+    function updateTotalPrice(selectedSize) {
+        const selectedTopping = document.querySelector('input[name="size"]:checked');
+        let basePrice = 0;
+        if (selectedTopping) {
+            basePrice = parseFloat(selectedTopping.dataset.price);
+        }
+
+        let toppingTotal = 0;
+        document.querySelectorAll('input[name="extra_toppings"]:checked').forEach(choice => {
+            const price = toppingPrices[choice.value]?.[selectedSize];
+            toppingTotal = toppingTotal+price;
+        });
+
+        const total = basePrice + toppingTotal;
+        const totalText = document.getElementById( "total-price-text");
+        if (totalText) {
+            totalText.textContent = `${total.toFixed(2)} kr`;
+        }}
+
+    console.log(  basePrice, toppingTotal);
   </script>
+  
 {% endblock %}

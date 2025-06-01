@@ -35,6 +35,7 @@ def product_view(request, name):
             topping.size_prices = {
             s.size: float(s.price) for s in MenuItemSize.objects.filter(item=topping)
             }
+        #create json for js dynamic pricing of toppings in the html 
         topping_prices_json = mark_safe(json.dumps({
             topping.id: topping.size_prices for topping in all_toppings}))
         
@@ -61,6 +62,8 @@ def add_to_cart(request):
 
         default_toppings = list(PizzaTopping.objects.filter(pizza=item).values_list('topping__id', flat=True))
         extra_toppings = [tid for tid in all_selected_toppings if tid not in default_toppings]
+        
+        #if user removes a topping that is already there - it doesn't change anything w the price
         removed_toppings = [tid for tid in default_toppings if tid not in all_selected_toppings]
 
         toppings_price = 0
@@ -88,7 +91,36 @@ def add_to_cart(request):
         request.session.modified = True
         
         messages.success(request, f"{item.name} ({selected_size}) added to your cart!")
-        print("POST data:", request.POST)    
+        print("POST data:", request.POST)   
+        print(messages) 
         return redirect('index')
 
     return redirect('index')
+
+def view_cart(request):
+    cart = request.session.get('cart', [])
+    cart_items = []
+    total = 0
+
+    for item in cart:
+
+        extra_toppings = MenuItem.objects.filter(id__in=item.get('extra_toppings', []))
+        removed_toppings = MenuItem.objects.filter(id__in=item.get('removed_toppings', []))
+
+        cart_items.append({
+            'name': item.get('item_name'),
+            'size': item.get('item_size'),
+            'base_price': item.get('item_price'),
+            'extra_toppings': extra_toppings,
+            'removed_toppings': removed_toppings,
+            'total_price': item.get('total_product_price'),
+            'image_filename': item.get('image_filename'),
+        })
+
+        total = total + item.get('total_product_price', 0)
+
+    return render(request, 'pizzeria/cart.html', 
+        {
+        'cart_items': cart_items,
+        'total': total }
+        )
