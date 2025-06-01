@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}{{ item_name }}{% endblock %}
+
+{% block content %}
+
+<form method="post" action="{% url 'add_to_cart' %}">
+  {% csrf_token %}
+  <h1>{{ item_name }}</h1>
+
+  {% if item_category == 'pizza' %}
+    {% for topping in default_toppings %}
+        <label style="display: inline;">
+            <input type="checkbox" name="default_toppings" value="{{ topping.id }}" checked>
+                {{ topping.name }}{% if not forloop.last %}, {% endif %}
+        </label>
+    {% endfor %}
+    {%endif%}
+
+  <h3>Select size:</h3>
+
+  {% for item in items %}
+    <label>
+      <input type="radio" name="size" value="{{ item.size }}" {% if forloop.first %}checked{% endif %}> 
+        {{ item.size|capfirst }} – {{ item.price }} kr
+    </label><br>
+  {% endfor %}
+
+  {% if item_category == 'pizza' %}
+    <h3>Add extra toppings:</h3>
+    {% for topping in all_toppings %}
+        <div>
+            <label>
+            <input type="checkbox" name="extra_toppings" value="{{ topping.id }}">
+            {{ topping.name }} <span data-topping-id="{{ topping.id }}"></span>
+            </label>
+        </div>
+    {% endfor %}
+
+  {% endif %}
+  <input type="hidden" name="item_name" value="{{ item_name }}">
+  <button type="submit">Add to Cart</button>
+</form>
+
+<p><a href="{% url 'index' %}">Back to Menu</a></p>
+
+
+<script id="topping-prices-data" type="application/json">
+    {{ topping_prices_json|safe }}
+</script>
+
+<script>
+    const toppingPrices = JSON.parse(
+      document.getElementById("topping-prices-data").textContent
+    );
+  
+    function updateToppingPrices(selectedSize) {
+      document.querySelectorAll('[data-topping-id]').forEach(span => {
+        const id = span.dataset.toppingId;
+        const price = toppingPrices[id]?.[selectedSize];
+        span.innerText = price !== undefined ? `+${price} kr` : '';
+      });
+    }
+  
+    document.addEventListener("DOMContentLoaded", () => {
+      const radios = document.querySelectorAll('input[name="size"]');
+      radios.forEach(radio => {
+        radio.addEventListener('change', () => {
+          if (radio.checked) updateToppingPrices(radio.value);
+        });
+        if (radio.checked) updateToppingPrices(radio.value);
+      });
+    });
+  </script>
+{% endblock %}

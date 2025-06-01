@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}{{ item_name }}{% endblock %}
+
+{% block content %}
+{% if messages %}
+  {% for message in messages %}
+    <div class="alert alert-success">{{ message }}</div>
+  {% endfor %}
+{% endif %}
+<body>
+<h2>Pizzas</h2>
+<ul>
+  {% for pizza in pizzas %}
+    <li>
+      <a href="{% url 'product_view' pizza.name %}">
+      
+      {{ pizza.name }} – starting from {{ pizza.min_price }} kr
+    </a> 
+    </li>
+  {% endfor %}
+</ul>
+
+<h2>Drinks</h2>
+<ul>
+  {% for drink in drinks %}
+    <li>
+      <a href="{% url 'product_view' drink.name %}">
+      {{ drink.name }} – starting from {{ drink.min_price }} kr
+      </a>
+    </li>
+  {% endfor %}
+</ul>
+</body>
+
+{% endblock %}
+
