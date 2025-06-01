@@ -13,13 +13,14 @@
       {% endif %}
 
       <h3>{{ item.name }} ({{ item.size }})</h3>
-      <p>Base Price: {{ item.base_price }} kr</p>
+      
 
       {% if item.extra_toppings %}
+        <p>Base Price: {{ item.base_price }} kr</p>
         <p>Extra Toppings:</p>
         <ul>
           {% for topping in item.extra_toppings %}
-            <li>{{ topping.name }} (+{{ topping.price }} kr)</li>
+            <li> {{ topping.name }} (+{{ topping.price }} kr)</li>
           {% endfor %}
         </ul>
       {% endif %}
@@ -35,16 +36,16 @@
 
       <p>Total for this item: {{ item.total_price }} kr</p>
 
-      <form method="post" action="{% url 'index' %}">
+      <form method="post" action="{% url 'remove_item' %}">
         {% csrf_token %}
         <input type="hidden" name="item_index" value="{{ forloop.counter0 }}">
-        <input type="submit" value="Remove">
+        <input type="submit" value="Remove" >
       </form>
     </div>
     <hr>
   {% endfor %}
 
-  <p>Total Cart Value: {{ total_amount }} kr</p>
+  <p>Total: {{ total }} kr</p>
 
   <form method="post" action="{% url 'index' %}">
     {% csrf_token %}
@@ -52,7 +53,7 @@
   </form>
 
   <p><a href="{% url 'index' %}">Continue Shopping</a></p>
-  <p><a href="{% url 'index' %}">Clear Cart</a></p>
+  <p><a href="{% url 'clear_cart' %}">Clear Cart</a></p>
 
 {% else %}
   <p>Your cart is empty.</p>

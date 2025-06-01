@@ -7,30 +7,21 @@
   <link rel="stylesheet" href="{% static 'pizzeria/style.css' %}">
 </head>
 <body>
-
     <header class="site-header">
         <div class="container">
           <span class="brand">GoodPizza</span>
           <nav class="top-nav">
-            {% if user.is_authenticated %}
               <h1><span class="welcome">Welcome, {{ user.first_name }}!</span></h1>
               <a href="{% url 'index' %}">Menu</a>
               <a href="{% url 'index' %}">My Account</a>
-              <a href="{% url 'index' %}">My Cart</a>
-              <a href="{% url 'index' %}">My Orders</a>
-              {% if user.is_staff %}
+              <a href="{% url 'cart' %}">My Cart</a>
+              <a href="{% url 'clear_cart' %}">My Orders</a>
+            
                 <a href="{% url 'index' %}">Manage Orders</a>
-              {% endif %}
-              {% if user.is_admin %}
+              
                 <a href="{% url 'index' %}">Admin</a>
-              {% endif %}
+             
               <a href="{% url 'index' %}">Log out</a>
-            {% else %}
-              <h1><span class="welcome">Welcome!</span></h1>
-              <a href="{% url 'index' %}">Menu</a>
-              <a href="{% url 'index' %}">Log in</a>
-              <a href="{% url 'index' %}">Register</a>
-            {% endif %}
           </nav>
         </div>
       </header>

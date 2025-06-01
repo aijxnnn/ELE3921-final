@@ -58,14 +58,16 @@ def add_to_cart(request):
         item = get_object_or_404(MenuItem, name=request.POST.get('item_name'))
         item_variant = MenuItemSize.objects.filter(item=item, size=selected_size).first()
 
-        all_selected_toppings = list(map(int, request.POST.getlist('default_toppings') + request.POST.getlist('extra_toppings')))
-
+        selected_extra_toppings = list(map(int, request.POST.getlist('extra_toppings')))
+        selected_default_toppings = list(map(int, request.POST.getlist('default_toppings')))
         default_toppings = list(PizzaTopping.objects.filter(pizza=item).values_list('topping__id', flat=True))
-        extra_toppings = [tid for tid in all_selected_toppings if tid not in default_toppings]
         
-        #if user removes a topping that is already there - it doesn't change anything w the price
-        removed_toppings = [tid for tid in default_toppings if tid not in all_selected_toppings]
+        extra_toppings = [tid for tid in selected_extra_toppings]
 
+        #if user removes a topping that is already there - it doesn't change anything w the price that's why it's different
+        removed_toppings = [tid for tid in default_toppings if tid not in selected_default_toppings]
+        #TODO: toping prices in view cart 
+        extra_toppings_list =[]
         toppings_price = 0
         for tid in extra_toppings:
             topping = get_object_or_404(MenuItem, id=tid)
@@ -74,6 +76,8 @@ def add_to_cart(request):
                 toppings_price += float(topping_size.price)
 
         total_price = float(item_variant.price) + toppings_price
+        print(total_price)
+        print(extra_toppings_list)
 
         cart_item = {
             'item_name': item.name,
@@ -113,14 +117,34 @@ def view_cart(request):
             'base_price': item.get('item_price'),
             'extra_toppings': extra_toppings,
             'removed_toppings': removed_toppings,
-            'total_price': item.get('total_product_price'),
+            'total_price': item.get('total_price'),
             'image_filename': item.get('image_filename'),
         })
 
-        total = total + item.get('total_product_price', 0)
-
+        total = total + item.get('total_price', 0)
+    print(total)
     return render(request, 'pizzeria/cart.html', 
         {
         'cart_items': cart_items,
         'total': total }
         )
+
+def clear_cart(request):
+    request.session['cart'] = []
+    request.session.modified = True
+    return redirect('cart')
+
+def remove_item(request):
+    if request.method == "POST":
+
+        index = int(request.POST.get("item_index"))
+
+        cart = request.session.get('cart', [])
+  
+        removed_item = cart.pop(index)
+        request.session['cart'] = cart
+        request.session.modified = True
+
+        messages.success(request, f"Removed {removed_item['item_name']} ({removed_item['item_size']}) from your cart.")
+
+    return redirect('cart')
