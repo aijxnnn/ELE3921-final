@@ -68,6 +68,7 @@ TEMPLATES = [
     },
 ]
 
+LOGIN_REDIRECT_URL = 'index'
 WSGI_APPLICATION = "app.wsgi.application"
 
 
