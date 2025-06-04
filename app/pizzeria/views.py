@@ -4,8 +4,9 @@ from django.db.models import Min
 from .models import MenuItem, PizzaTopping, Order, OrderItem, MenuItemSize
 import json
 from django.utils.safestring import mark_safe
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm
 from django.contrib.auth import login
+from .forms import CreateUserForm, EditAccountForm
 
 def index(request):
     all_items = MenuItem.objects.filter(category__in=['pizza', 'drink'])
@@ -134,7 +135,6 @@ def view_cart(request):
         'total': total }
         )
 
-
 #TODO combine clear cart and remove_item? 
 def clear_cart(request):
     request.session['cart'] = []
@@ -156,7 +156,7 @@ def remove_item(request):
 
     return redirect('cart')
 
-def place_order(request):
+def order(request):
 
     cart = request.session.get('cart', [])
     
@@ -195,12 +195,37 @@ def place_order(request):
 
 def register(request):
     if request.method == 'POST':
-        form = UserCreationForm(request.POST)
+        form = CreateUserForm(request.POST)
         if form.is_valid():
             user = form.save()
             login(request, user)
             return redirect('index')
     else:
-        form = UserCreationForm()
+        form = CreateUserForm()
     
     return render(request, 'pizzeria/register.html', {'form': form})
+   
+def edit_account_view(request):
+    if request.method == 'POST':
+        form = EditAccountForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            return redirect('account')
+    else:
+        form = EditAccountForm(instance=request.user)
+
+    return render(request, 'pizzeria/edit_account.html', {'form': form})
+
+def account_view(request):
+    return render(request, "pizzeria/account.html", {"user": request.user})
+
+
+
+def my_orders(request):
+    orders = (
+        Order.objects
+            .filter(user=request.user)
+            .order_by('status', '-created_at')
+            .prefetch_related('items')
+    )
+    return render(request, 'pizzeria/my_orders.html', {'orders': orders})

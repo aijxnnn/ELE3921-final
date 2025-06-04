@@ -52,7 +52,7 @@
 
   <p>Total: {{ total }} kr</p>
 
-  <form method="post" action="{% url 'index' %}">
+  <form method="post" action="{% url 'order' %}">
     {% csrf_token %}
     <input type="submit" value="Place Order">
   </form>

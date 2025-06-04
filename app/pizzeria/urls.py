@@ -15,5 +15,9 @@ urlpatterns = [
     path('login/', auth_views.LoginView.as_view(template_name='login.html'), name='login'),
     path('logout/', auth_views.LogoutView.as_view(next_page='index'), name='logout'),
     path('register/', views.register, name='register'),
-
+    path('my-account/', views.account_view, name='account'),
+    path('edit-account/', views.edit_account_view, name='edit_account'),
+    path('edit-account/change-password', auth_views.PasswordChangeView.as_view(template_name='pizzeria/change_password.html',success_url='/account/'), name='change_password'),
+    path('cart/order/', views.order, name='order'),
+    path('order-history/', views.my_orders, name='my_orders'),
 ]

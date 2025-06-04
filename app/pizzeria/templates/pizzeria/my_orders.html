@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% block title %}My Orders{% endblock %}
+
+{% block content %}
+  <div class="container">
+    <h1 class="highlight">My Orders</h1>
+    <div class="table__body">
+      <table>
+        <thead>
+          <tr>
+            <th>Order ID</th>
+            <th>Date</th>
+            <th>Items</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for order in orders %}
+            <tr>
+              <td>{{ order.id }}</td>
+              <td>{{ order.created_at }}</td>
+              <td>
+                <ul>
+                  {% for item in order.items.all %}
+                    <li>
+                      {{ item.item_name }} ({{ item.item_size }}) – {{ item.total_item_price }} kr
+                      {% if item.extra_toppings %}
+                        <br><small>+ {{ item.extra_toppings }}</small>
+                      {% endif %}
+                      {% if item.removed_toppings %}
+                        <br><small>- {{ item.removed_toppings }}</small>
+                      {% endif %}
+                    </li>
+                  {% endfor %}
+                </ul>
+              </td>
+              <td>
+                <div style="display: flex; justify-content: center; align-items: center; height: 100%;">
+                  <span class="status {{ order.status }}">{{ order.get_status_display }}</span>
+                </div>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <a class="btn" href="{% url 'index' %}">Back to menu</a>
+  </div>
+{% endblock %}
