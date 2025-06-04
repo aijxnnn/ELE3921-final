@@ -3,47 +3,95 @@
 {% block title %}{{ item_name }}{% endblock %}
 
 {% block content %}
+<div class="product-modal">
+  
+  <div class="product-image-panel">
+      <img
+        src="{% static 'pizzeria/images/'|add:item.image_filename %}"
+        alt="{{ item_name }}"
+        class="product-image-large"
+      >
+  </div>
 
-<form method="post" action="{% url 'add_to_cart' %}">
-  {% csrf_token %}
-  <h1>{{ item_name }}</h1>
+  <form method="post" action="{% url 'add_to_cart' %}?next={{ request.path }}" class="product-form product-controls">
+    {% csrf_token %}
 
-  {% if item_category == 'pizza' %}
-    {% for topping in default_toppings %}
-        <label style="display: inline;">
-            <input type="checkbox" name="default_toppings" value="{{ topping.id }}" checked>
-                {{ topping.name }}{% if not forloop.last %}, {% endif %}
-        </label>
-    {% endfor %}
-    {%endif%}
+    <h1 class="highlight">{{ item_name }}</h1>
 
-  <h3>Select size:</h3>
+    {% if item_category == 'pizza' and default_toppings %}
+      <div class="form-section" style = "margin-bottom: 0px;">
+        <h3>Default toppings:</h3>
+        {% for topping in default_toppings %}
+          <label style="display: inline;">
+            <input type="checkbox" name="default_toppings" value="{{ topping.id }}" checked disabled>
+            {{ topping.name }}{% if not forloop.last %}, {% endif %}
+          </label>
+        {% endfor %}
+      </div>
+    {% endif %}
 
-  {% for item in items %}
-    <label>
-      <input type="radio" name="size" value="{{ item.size }}" data-price="{{ item.price }}" {% if forloop.first %}checked{% endif %}> 
-        {{ item.size|capfirst }} – {{ item.price }} kr
-    </label><br>
-  {% endfor %}
-
-  {% if item_category == 'pizza' %}
-    <h3>Add extra toppings:</h3>
-    {% for topping in all_toppings %}
-        <div>
-            <label>
-            <input type="checkbox" name="extra_toppings" value="{{ topping.id }}">
-            {{ topping.name }} <span data-topping-id="{{ topping.id }}"></span>
+    <div class="form-section">
+      <h3>Select size:</h3>
+      <div class="radio-inputs">
+        {% for item in items %}
+          <div class="radio">
+            <input 
+              type="radio" 
+              name="size" 
+              value="{{ item.size }}" 
+              data-price="{{ item.price }}" 
+              id="size-{{ item.id }}"
+              {% if forloop.first %}checked{% endif %}
+            >
+            <label for="size-{{ item.id }}" class="name">
+             <p> {{ item.size|capfirst }} </p>
+             <p>{{ item.price }} kr</p>
             </label>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    {% if item_category == 'pizza' %}
+      <div class="form-section">
+        <h3>Add extra toppings:</h3>
+        <div class="topping-grid">
+          {% for topping in all_toppings %}
+            <div class="checkbox-wrapper-16">
+              <label class="checkbox-wrapper">
+                <input 
+                  type="checkbox" 
+                  name="extra_toppings" 
+                  value="{{ topping.id }}" 
+                  class="checkbox-input"
+                >
+                <span class="checkbox-tile">
+                  <span class="checkbox-icon">
+                    {% if topping.image_filename %}
+                      <img 
+                        src="{% static 'pizzeria/images/'|add:topping.image_filename %}" 
+                        alt="{{ topping.name }}" 
+                        style="width: 3rem; height: 3rem;" 
+                      >
+                    {% endif %}
+                  </span>
+                  <span class="checkbox-label">
+                    {{ topping.name }} <span data-topping-id="{{ topping.id }}"></span>
+                  </span>
+                </span>
+              </label>
+            </div>
+          {% endfor %}
         </div>
-    {% endfor %}
+      </div>
+    {% endif %}
 
-  {% endif %}
-  <input type="hidden" name="item_name" value="{{ item_name }}">
-  <input type="hidden" id="total-price" value="0">
-  <button type="submit">Add to Cart for <span id="total-price-text"></span></button>
-</form>
+    <input type="hidden" name="item_name" value="{{ item_name }}">
+    <input type="hidden" id="total-price" value="0">
 
-<p><a href="{% url 'index' %}">Back to Menu</a></p>
+    <button type="submit" class="btn">Add to Cart for <span id="total-price-text"></span></button>
+  </form>
+</div>
 
 
 <script id="topping-prices-data" type="application/json">

@@ -47,6 +47,7 @@ def product_view(request, name):
         topping_prices_json = []
     
     return render(request, "pizzeria/product_view.html", {
+        'item': item,
         'items': item_sizes,
         'item_name': item.name,
         'item_category': item.category,

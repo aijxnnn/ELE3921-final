@@ -22,11 +22,19 @@
                  alt="{{ pizza.name }}"
                  class="product-image">
           {% endif %}
-          <h3>{{ pizza.name }}</h3>
+          <h3 style="
+          margin-bottom: 0px;
+          margin-top: 0px;">{{ pizza.name }}</h3>
         </a>
-          <p>Starting from {{ pizza.min_price }} kr</p>
+          <p style="
+          margin-bottom: 0px;
+          margin-top: 0px;" >Starting from {{ pizza.min_price }} kr</p>
           <div class="card-footer">
-            <button type="button" class="btn">Choose</button>
+            <a href="{% url 'product_view' pizza.name %}">
+            <button type="button" class="btn" style="
+            margin-bottom: 0px;
+            margin-top: 0px;">Choose</button>
+            </a>
           </div>
         </div>
       {% endfor %}
@@ -46,11 +54,19 @@
                  alt="{{ drink.name }}"
                  class="product-image">
           {% endif %}
-          <h3>{{ drink.name }}</h3>
+          <h3 style="
+          margin-bottom: 0px;
+          margin-top: 0px;">{{ drink.name }}</h3>
         </a>
-        <p>Starting from {{ drink.min_price }} kr</p>
+        <p style="
+        margin-bottom: 0px;
+        margin-top: 0px;">Starting from {{ drink.min_price }} kr</p>
           <div class="card-footer">
-            <button type="button" class="btn">Choose</button>
+            <a href="{% url 'product_view' drink.name %}">
+            <button type="button" class="btn" style="
+            margin-bottom: 0px;
+            margin-top: 0px;">Choose</button>
+            </a>
           </div>
         </div>
       {% endfor %}
