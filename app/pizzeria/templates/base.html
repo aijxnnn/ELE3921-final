@@ -1,51 +1,62 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>{% block title %}GoodPizza{% endblock %}</title>
-  {% load static %}
+  <title>{% block title %}Oven Theory{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{% static 'pizzeria/style.css' %}">
 </head>
 <body>
-    <header class="site-header">
-        <div class="container">
-          <span class="brand">GoodPizza</span>
-          <nav class="top-nav">
-            {% if user.is_authenticated %}
-              <h1><span class="welcome">Welcome, {{ user.first_name }}!</span></h1>
-              <a href="{% url 'index' %}">Menu</a>
-              <a href="{% url 'account' %}">My Account</a>
-              <a href="{% url 'cart' %}">My Cart</a>
-              <a href="{% url 'my_orders' %}">My Orders</a>
-              {% if user.is_staff %}
-                <a href="{% url 'index' %}">Manage Orders</a>
-              {% endif %}
-              {% if user.is_superuser %}
-                <a href="/admin/">Admin</a>
-              {% endif %}
-                <form method="post" action="{% url 'logout' %}" style="display: inline;">
-                  {% csrf_token %}
-                  <button type="submit" style="all: unset; color: blue; text-decoration: underline; cursor: pointer;">
-                    Logout
-                  </button>
-                </form>
-              {% else %}
-                <h1><span class="welcome">Welcome!</span></h1>
-                <a href="{% url 'index' %}">Menu</a>
-                <a href="{% url 'login' %}">Log in</a>
-                <a href="{% url 'register' %}">Register</a>
-              {% endif %}
-          </nav>
-        </div>
-      </header>
-
+  <div class="header">
+    <div class="left-group">
+    <a href="{% url 'index' %}">
+      <img src="{% static 'pizzeria/images/logo.png' %}" alt="Logo" width="150">
+    </a>
+    <div class="divider"></div>
+    <div style = "margin-top: 0px; margin-bottom: 16px;">
+      {% if user.is_authenticated %}
+      <h3>
+        <span><strong>Welcome, {{ user.first_name }}!</strong></span>
+      </h3>
+      <nav class ="nav">
+        <a href="{% url 'index' %}">Menu</a>
+        <a href="{% url 'account' %}">My Account</a>
+        <a href="{% url 'cart' %}">My Cart</a>
+        <a href="{% url 'my_orders' %}">My Orders</a>
+        {% if user.is_staff %}
+          <a href="{% url 'manage_orders' %}">Manage Orders</a>
+        {% endif %}
+        {% if user.is_superuser %}
+          <a href="/admin/">Admin</a>
+        {% endif %}
+      {% else %}
+        <a href="{% url 'login' %}">Log in</a>
+        <a href="{% url 'register' %}">Register</a>
+      {% endif %}
+    </nav>
+    </div>
+    </div>
+    {% if user.is_authenticated %}
+      <form method="post" action="{% url 'logout' %}">
+        {% csrf_token %}
+        <button type="submit" class="btn logout-btn">Log out</button>
+      </form>
+    {% else %}
+      <a href="{% url 'login' %}" class="btn">Log in</a>
+    {% endif %}
+  </div>
+      
   <main>
     {% block content %}{% endblock %}
   </main>
 
-  <footer>
-    <p>&copy; GoodPizza. All rights reserved.</p>
-  </footer>
+
 
 </body>
+<footer class="footer" >
+  <p>&copy; Oven Theory. All rights reserved.</p>
+</footer>
 </html>

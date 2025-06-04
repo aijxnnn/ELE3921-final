@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}{{ item_name }}{% endblock %}
+
+{% block content %}
+{% for group in order_groups %}
+  <h2 class="status-title">{{ group.0 }}</h2>
+  <div class="table__body">
+    <table>
+      <thead>
+        <tr>
+          <th>Order ID</th>
+          <th>User</th>
+          <th>Date</th>
+          <th>Status</th>
+          <th>Items</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for order in group.1 %}
+          <tr class="status-{{ order.status }}">
+            <td>{{ order.id }}</td>
+            <td>{{ order.user.username }}</td>
+            <td>{{ order.created_at|date:"M d, Y, g:i a" }}</td>
+            <td>
+              <form method="post">
+                {% csrf_token %}
+                <input type="hidden" name="order_id" value="{{ order.id }}">
+                <select name="status" onchange="this.form.submit()" class="status {{ order.status }}">
+                  {% for key, label in status_choices %}
+                    <option value="{{ key }}" {% if key == order.status %}selected{% endif %}>
+                      {{ label }}
+                    </option>
+                  {% endfor %}
+                </select>
+              </form>
+            </td>
+            <td>
+              <ul>
+                {% for item in order.items.all %}
+                  <li>
+                    <strong>{{ item.item_name }} ({{ item.item_size }})</strong> – {{ item.total_item_price }} kr
+                    {% if item.extra_toppings %}
+                      <br><small class="plus">+ {{ item.extra_toppings }}</small>
+                    {% endif %}
+                    {% if item.removed_toppings %}
+                      <br><small class="minus">– {{ item.removed_toppings }}</small>
+                    {% endif %}
+                  </li>
+                {% endfor %}
+              </ul>
+            </td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="5">No orders.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endfor %}
+{% endblock %}

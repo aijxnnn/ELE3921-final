@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
-from django.db.models import Min
+from django.db.models import Min, Case, When, IntegerField
 from .models import MenuItem, PizzaTopping, Order, OrderItem, MenuItemSize
 import json
 from django.utils.safestring import mark_safe
@@ -219,8 +219,6 @@ def edit_account_view(request):
 def account_view(request):
     return render(request, "pizzeria/account.html", {"user": request.user})
 
-
-
 def my_orders(request):
     orders = (
         Order.objects
@@ -229,3 +227,36 @@ def my_orders(request):
             .prefetch_related('items')
     )
     return render(request, 'pizzeria/my_orders.html', {'orders': orders})
+
+def manage_orders(request):
+    if request.method == "POST":
+        order_id = request.POST.get("order_id")
+        new_status = request.POST.get("status")
+        order = get_object_or_404(Order, id=order_id)
+        if new_status in dict(Order.ORDER_STATUS):
+            order.status = new_status
+            order.save()
+
+    orders = (
+        Order.objects
+            .all()
+            .order_by('status', '-created_at')
+            .prefetch_related('items')
+    )
+        
+    pending_orders = orders.filter(status='pending').order_by('-created_at')
+    preparing_orders = orders.filter(status='preparing').order_by('-created_at')
+    complete_orders = orders.filter(status='complete').order_by('-created_at')
+
+    order_groups = [
+        ("Pending Orders", pending_orders),
+        ("Preparing Orders", preparing_orders),
+        ("Completed Orders", complete_orders),
+    ]
+    return render(request, 'pizzeria/manage_orders.html', {
+        'pending_orders': pending_orders,
+        'order_groups': order_groups,
+        'preparing_orders': preparing_orders,
+        'complete_orders': complete_orders,
+        'status_choices': Order.ORDER_STATUS,
+    })

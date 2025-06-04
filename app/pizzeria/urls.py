@@ -20,4 +20,5 @@ urlpatterns = [
     path('edit-account/change-password', auth_views.PasswordChangeView.as_view(template_name='pizzeria/change_password.html',success_url='/account/'), name='change_password'),
     path('cart/order/', views.order, name='order'),
     path('order-history/', views.my_orders, name='my_orders'),
+    path('manage_orders/', views.manage_orders, name='manage_orders'),
 ]

@@ -9,28 +9,53 @@
   {% endfor %}
 {% endif %}
 <body>
-<h2>Pizzas</h2>
-<ul>
-  {% for pizza in pizzas %}
-    <li>
-      <a href="{% url 'product_view' pizza.name %}">
+<div class="container">
+  <section>
+    <h1 class="highlight">🍕 Pizzas</h1>
+  
+    <div class="grid">
+      {% for pizza in pizzas %}
+      <div class="card">
+        <a href="{% url 'product_view' pizza.name %}">
+          {% if pizza.image_filename %}
+            <img src="{% static 'pizzeria/images/'|add:pizza.image_filename %}"
+                 alt="{{ pizza.name }}"
+                 class="product-image">
+          {% endif %}
+          <h3>{{ pizza.name }}</h3>
+        </a>
+          <p>Starting from {{ pizza.min_price }} kr</p>
+          <div class="card-footer">
+            <button type="button" class="btn">Choose</button>
+          </div>
+        </div>
+      {% endfor %}
       
-      {{ pizza.name }} – starting from {{ pizza.min_price }} kr
-    </a> 
-    </li>
-  {% endfor %}
-</ul>
+    </div>
+  </section>
 
-<h2>Drinks</h2>
-<ul>
-  {% for drink in drinks %}
-    <li>
-      <a href="{% url 'product_view' drink.name %}">
-      {{ drink.name }} – starting from {{ drink.min_price }} kr
-      </a>
-    </li>
-  {% endfor %}
-</ul>
+  <section>
+    <h1 class="highlight">🥤 Drinks</h1>
+  
+    <div class="grid">
+      {% for drink in drinks %}
+      <div class="card">
+        <a href="{% url 'product_view' drink.name %}">
+          {% if drink.image_filename %}
+            <img src="{% static 'pizzeria/images/'|add:drink.image_filename %}"
+                 alt="{{ drink.name }}"
+                 class="product-image">
+          {% endif %}
+          <h3>{{ drink.name }}</h3>
+        </a>
+        <p>Starting from {{ drink.min_price }} kr</p>
+          <div class="card-footer">
+            <button type="button" class="btn">Choose</button>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </section>
 </body>
 
 {% endblock %}
