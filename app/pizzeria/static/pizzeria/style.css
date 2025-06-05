@@ -973,3 +973,9 @@ thead th:last-child {
     gap: 1rem;
     margin-top: 60px;
   }
+
+  .form-error {
+    color: red;
+    font-size: 0.9rem;
+    margin-top: 4px;
+  }

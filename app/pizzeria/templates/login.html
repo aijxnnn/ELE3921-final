@@ -8,26 +8,42 @@
     <div class="alert">{{ message }}</div>
   {% endfor %}
 {% endif %}
+
 <main>
-  <div class="form-container">
+  <div class="form-container", style = "margin-top: 50px;">
   <div class="login-form">
     <h2 class="form-title">Login</h2>
 
     <form method="post">
       {% csrf_token %}
-
+    
       <div class="input-container">
         {{ form.username.label_tag }}
         {{ form.username }}
+        {% for error in form.username.errors %}
+          <div class="form-error">{{ error }}</div>
+        {% endfor %}
       </div>
-
+    
       <div class="input-container">
         {{ form.password.label_tag }}
         {{ form.password }}
+        {% for error in form.password.errors %}
+          <div class="form-error">{{ error }}</div>
+        {% endfor %}
       </div>
-
+    
+      {% if form.non_field_errors %}
+        <div class="form-error">
+          {% for error in form.non_field_errors %}
+            <p>{{ error }}</p>
+          {% endfor %}
+        </div>
+      {% endif %}
+    
       <button type="submit" class="submit">Log in</button>
     </form>
+    
 
     <p class="signup-link">
       Don't have an account?
