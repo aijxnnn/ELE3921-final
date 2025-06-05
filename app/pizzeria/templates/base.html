@@ -16,12 +16,10 @@
       <img src="{% static 'pizzeria/images/logo.png' %}" alt="Logo" width="150">
     </a>
     <div class="divider"></div>
-    <div style = "margin-top: 0px; margin-bottom: 16px;">
+    <div style="margin-top: 0px; margin-bottom: 16px;">
       {% if user.is_authenticated %}
-      <h3>
-        <span><strong>Welcome, {{ user.first_name }}!</strong></span>
-      </h3>
-      <nav class ="nav">
+      <h3><strong>Welcome, {{ user.first_name }}!</strong></h3>
+      <nav class="nav">
         <a href="{% url 'index' %}">Menu</a>
         <a href="{% url 'account' %}">My Account</a>
         <a href="{% url 'cart' %}">My Cart</a>
@@ -32,32 +30,35 @@
         {% if user.is_superuser %}
           <a href="/admin/">Admin</a>
         {% endif %}
+      </nav>
+      {% else %}
+          <h3><strong>Welcome!</strong></h3>
       {% endif %}
-    </nav>
     </div>
     </div>
+  
     {% if user.is_authenticated %}
       <form method="post" action="{% url 'logout' %}">
         {% csrf_token %}
         <button type="submit" class="btn logout-btn">Log out</button>
       </form>
     {% else %}
-    <div style= " gap: 10px">
-      <a href="{% url 'login' %}" class="btn">Log in</a>
-      <a href="{% url 'register' %}" class="btn">Register</a>
-    </div>
+      <div style="display: flex; gap: 10px; align-items: center;">
+        <a href="{% url 'login' %}" class="btn">Log in</a>
+        <a href="{% url 'register' %}" class="btn">Register</a>
+      </div>
     {% endif %}
-
   </div>
+  
       
   <main>
     {% block content %}{% endblock %}
   </main>
 
 
+  <footer class="footer">
+    <p>&copy; Oven Theory. All rights reserved.</p>
+  </footer>
 
 </body>
-<footer class="footer" >
-  <p>&copy; Oven Theory. All rights reserved.</p>
-</footer>
 </html>

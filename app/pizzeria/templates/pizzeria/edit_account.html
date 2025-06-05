@@ -2,16 +2,21 @@
 {% block title %}Edit Account{% endblock %}
 
 {% block content %}
-<h2>Edit Your Profile</h2>
+<h2 class="highlight" style = "margin-top: 50px;">Edit Your Profile</h2>
 
-<form method="post">
-  {% csrf_token %}
-  <fieldset>
-    <legend>Account Info</legend>
-    {{ form.as_p }}
-  </fieldset>
-  <input type="submit" value="Save Changes">
-</form>
-<a class="btn" href="{% url 'change_password' %}">Change Password</a>
-<p><a href="{% url 'account' %}">Cancel</a></p>
+<div class="edit-account-container">
+  <form method="post" class="register-form">
+    {% csrf_token %}
+    <fieldset>
+      <legend>Account Info</legend>
+      {{ form.as_p }}
+    </fieldset>
+    <input  class="btn" type="submit" value="Save Changes">
+  </form>
+
+  <div class="account-actions">
+    <a class="btn" href="{% url 'change_password' %}">Change Password</a>
+    <a class="btn" href="{% url 'account' %}">Cancel</a>
+  </div>
+</div>
 {% endblock %}

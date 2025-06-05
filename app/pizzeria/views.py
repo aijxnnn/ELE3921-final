@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
-from django.db.models import Min, Case, When, IntegerField
+from django.db.models import Min, Case, When, IntegerField, Value
 from .models import MenuItem, PizzaTopping, Order, OrderItem, MenuItemSize
 import json
 from django.contrib.auth.decorators import login_required
@@ -10,6 +10,8 @@ from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm
 from django.contrib.auth import login
 from .forms import CreateUserForm, EditAccountForm
 from django.urls import reverse
+from django.utils import timezone
+from datetime import timedelta
 
 def index(request):
     all_items = MenuItem.objects.filter(category__in=['pizza', 'drink'])
@@ -149,6 +151,8 @@ def view_cart(request):
         })
                
         total = total + item.get('total_price', 0)
+        request.session['cart_total'] = total
+        request.session.modified = True
     print(total)
     return render(request, 'pizzeria/cart.html', 
         {
@@ -186,7 +190,7 @@ def order(request):
         return redirect('view_cart')
     
     order_total = request.session.get('cart_total', 0)
-    
+
     order = Order.objects.create(
         user=request.user,
         total_price=order_total
@@ -243,13 +247,25 @@ def account_view(request):
     return render(request, "pizzeria/account.html", {"user": request.user})
 
 def my_orders(request):
-    orders = (
-        Order.objects
-            .filter(user=request.user)
-            .order_by('status', '-created_at')
-            .prefetch_related('items')
-    )
-    return render(request, 'pizzeria/my_orders.html', {'orders': orders})
+    cutoff = timezone.now() - timedelta(days=1)
+
+    orders = Order.objects.filter(user=request.user).annotate(
+        status_order=Case(
+            When(status='Pending', then=Value(0)),
+            When(status='Preparing', then=Value(1)),
+            When(status='Ready', then=Value(2)),
+            default=Value(99),
+            output_field=IntegerField()
+        )
+    ).order_by('status_order', '-created_at').prefetch_related('items')
+
+    recent_orders = orders.filter(created_at__gte=cutoff)
+    old_orders = orders.filter(created_at__lt=cutoff)
+
+    return render(request, 'pizzeria/my_orders.html', {
+        'recent_orders': recent_orders,
+        'old_orders': old_orders
+    })
 
 def manage_orders(request):
     if request.method == "POST":

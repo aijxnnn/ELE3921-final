@@ -1,6 +1,5 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}{{ item_name }}{% endblock %}
 
 {% block content %}
 
@@ -9,14 +8,32 @@
     <div class="alert">{{ message }}</div>
   {% endfor %}
 {% endif %}
+<main>
+  <div class="form-container">
+  <div class="login-form">
+    <h2 class="form-title">Login</h2>
 
-<h2>Login</h2>
-<form method="post">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <input type="submit" value="Log in">
-</form>
+    <form method="post">
+      {% csrf_token %}
 
-<a href="{% url 'register' %}">Don't have an account?</a>
+      <div class="input-container">
+        {{ form.username.label_tag }}
+        {{ form.username }}
+      </div>
 
+      <div class="input-container">
+        {{ form.password.label_tag }}
+        {{ form.password }}
+      </div>
+
+      <button type="submit" class="submit">Log in</button>
+    </form>
+
+    <p class="signup-link">
+      Don't have an account?
+      <a href="{% url 'register' %}">Register</a>
+    </p>
+  </div>
+</div>
+</main>
 {% endblock %}

@@ -3,6 +3,8 @@
 {% block title %}{{ item_name }}{% endblock %}
 
 {% block content %}
+
+<main style = "margin-top: 50px;">
 {% for group in order_groups %}
   <h2 class="status-title">{{ group.0 }}</h2>
   <div class="table__body">
@@ -49,6 +51,7 @@
                   </li>
                 {% endfor %}
               </ul>
+              Total: {{ order.total_price }} kr
             </td>
           </tr>
         {% empty %}
@@ -58,4 +61,5 @@
     </table>
   </div>
 {% endfor %}
+</main>
 {% endblock %}

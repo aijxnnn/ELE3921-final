@@ -15,7 +15,7 @@
           </tr>
         </thead>
         <tbody>
-          {% for order in orders %}
+          {% for order in recent_orders %}
             <tr>
               <td>{{ order.id }}</td>
               <td>{{ order.created_at }}</td>
@@ -33,17 +33,64 @@
                     </li>
                   {% endfor %}
                 </ul>
+                Total: {{ order.total_price }} kr
               </td>
               <td>
-                <div style="display: flex; justify-content: center; align-items: center; height: 100%;">
-                  <span class="status {{ order.status }}">{{ order.get_status_display }}</span>
-                </div>
+                <span class="status {{ order.status|lower|slugify }}">{{ order.get_status_display }}</span>
               </td>
             </tr>
+          {% empty %}
+            <tr><td colspan="4" style="text-align: center;">No recent orders.</td></tr>
           {% endfor %}
         </tbody>
       </table>
     </div>
+
+    <details style="margin-bottom: 2rem;">
+      <summary style="cursor: pointer; font-weight: bold; padding: 1rem 0;">View Previous Order History</summary>
+      <div class="table__body" style="margin-top: 1rem;">
+        <table>
+          <thead>
+            <tr>
+              <th>Order ID</th>
+              <th>Date</th>
+              <th>Items</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for order in old_orders %}
+              <tr>
+                <td>{{ order.id }}</td>
+                <td>{{ order.created_at }}</td>
+                <td>
+                  <ul>
+                    {% for item in order.items.all %}
+                      <li>
+                        {{ item.item_name }} ({{ item.item_size }}) – {{ item.total_item_price }} kr
+                        {% if item.extra_toppings %}
+                          <br><small>+ {{ item.extra_toppings }}</small>
+                        {% endif %}
+                        {% if item.removed_toppings %}
+                          <br><small>- {{ item.removed_toppings }}</small>
+                        {% endif %}
+                      </li>
+                    {% endfor %}
+                  </ul>
+                  Total: {{ order.total_price }} kr
+                </td>
+                <td>
+                  <span class="status {{ order.status|lower|slugify }}">{{ order.get_status_display }}</span>
+                </td>
+              </tr>
+            {% empty %}
+              <tr><td colspan="4" style="text-align: center;">No older orders.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </details>
+
     <a class="btn" href="{% url 'index' %}">Back to menu</a>
   </div>
 {% endblock %}

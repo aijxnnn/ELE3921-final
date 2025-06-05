@@ -4,17 +4,17 @@
 
 {% block content %}
 
-  <main class="container account-page">
+  <main class="container" style = "margin-top: 100px; background-color: white;">
     <h2 class="highlight">My Account</h2>
 
-    <div class="account-details">
+    <div>
       <p><strong>Username:</strong> {{ user.username }}</p>
       <p><strong>First Name:</strong> {{ user.first_name }}</p>
       <p><strong>Last Name:</strong> {{ user.last_name }}</p>
       <p><strong>Email:</strong> {{ user.email }}</p>
     </div>
 
-    <div class="account-actions">
+    <div>
       <p><a class="btn" href="{% url 'edit_account' %}">Edit Account</a>
       </p>
     </div>

@@ -30,9 +30,13 @@
 {% endif %}
 <body>
 <div class="container">
+  <div class="scroll-buttons">
+    <button onclick="document.getElementById('pizzas').scrollIntoView({ behavior: 'smooth' })">Pizzas</button>
+    <button onclick="document.getElementById('drinks').scrollIntoView({ behavior: 'smooth' })">Drinks</button>
+  </div>
+  <h1 class="highlight" id="pizzas">🍕 Pizzas</h1>
   <section>
-    <h1 class="highlight">🍕 Pizzas</h1>
-  
+    
     <div class="grid">
       {% for pizza in pizzas %}
       <div class="card">
@@ -62,9 +66,8 @@
     </div>
   </section>
 
-  <section>
-    <h1 class="highlight">🥤 Drinks</h1>
-  
+  <section >
+    <h1 class="highlight" id="drinks" >🥤 Drinks</h1>
     <div class="grid">
       {% for drink in drinks %}
       <div class="card">
