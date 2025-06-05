@@ -3,65 +3,73 @@
 {% block title %}My Cart{% endblock %}
 
 {% block content %}
-{% if messages %}
-  {% for message in messages %}
-    <div class="alert alert-success">{{ message }}</div>
-  {% endfor %}
-{% endif %}
-<h1>My Cart</h1>
+<div class="container">
+  {% if messages %}
+    {% for message in messages %}
+      <div class="alert alert-success">{{ message }}</div>
+    {% endfor %}
+  {% endif %}
 
-{% if cart_items %}
-  {% for item in cart_items %}
-    <div>
-      {% if item.image_filename %}
-        <img src="{% static 'pizzeria/'|add:item.image_filename %}" alt="{{ item.name }}">
-      {% endif %}
+  <h1 class="highlight">My Cart</h1>
 
-      <h3>{{ item.name }} ({{ item.size }})</h3>
-      
+  {% if cart_items %}
+    {% for item in cart_items %}
+      <div class="cart-item">
+        <div class="cart-item-img">
+          {% if item.image_filename %}
+            <img src="{% static 'pizzeria/images/'|add:item.image_filename %}" alt="{{ item.name }}">
+          {% endif %}
+        </div>
 
-      {% if item.extra_toppings %}
-        <p>Base Price: {{ item.base_price }} kr</p>
-        <p>Extra Toppings:</p>
-        <ul>
-          {% for topping in item.extra_toppings %}
-            <li> {{ topping.name }} (+{{ topping.price }} kr)</li>
-          {% endfor %}
-        </ul>
-      {% endif %}
+        <div class="cart-item-info">
+          <h3>{{ item.name }} ({{ item.size }})</h3>
+          <p>Base Price: {{ item.base_price }} kr</p>
 
-      {% if item.removed_toppings %}
-        <p>Removed Toppings:</p>
-        <ul>
-          {% for topping in item.removed_toppings %}
-            <li>{{ topping.name }}</li>
-          {% endfor %}
-        </ul>
-      {% endif %}
+          {% if item.extra_toppings %}
+            <p>Extra Toppings:</p>
+            <ul>
+              {% for topping in item.extra_toppings %}
+                <li>{{ topping.name }} (+{{ topping.price }} kr)</li>
+              {% endfor %}
+            </ul>
+          {% endif %}
 
-      <p>Total for this item: {{ item.total_price }} kr</p>
+          {% if item.removed_toppings %}
+            <p>Removed Toppings:</p>
+            <ul>
+              {% for topping in item.removed_toppings %}
+                <li>{{ topping.name }}</li>
+              {% endfor %}
+            </ul>
+          {% endif %}
 
-      <form method="post" action="{% url 'remove_item' %}">
-        {% csrf_token %}
-        <input type="hidden" name="item_index" value="{{ forloop.counter0 }}">
-        <input type="submit" value="Remove" >
-      </form>
-    </div>
-    <hr>
-  {% endfor %}
+          <p><strong>Total for this item: {{ item.total_price }} kr</strong></p>
 
-  <p>Total: {{ total }} kr</p>
+          <form method="post" action="{% url 'remove_item' %}">
+            {% csrf_token %}
+            <input type="hidden" name="item_index" value="{{ forloop.counter0 }}">
+            <button type="submit" class="remove-btn">Remove</button>
+          </form>
+        </div>
+      </div>
+    {% endfor %}
 
-  <form method="post" action="{% url 'order' %}">
-    {% csrf_token %}
-    <input type="submit" value="Place Order">
-  </form>
+    <h2>Total Cart Value: {{ total }} kr</h2>
 
-  <p><a href="{% url 'index' %}">Continue Shopping</a></p>
-  <p><a href="{% url 'clear_cart' %}">Clear Cart</a></p>
+    <form method="post" id="checkout-form" action="{% url 'order' %}">
+      {% csrf_token %}
+      <a class="btn" href="{% url 'index' %}">Continue Shopping</a>
+      <button type="submit" class="btn btn-primary">
+        Place Order for {{ total }} kr
+      </button>
+    </form>
 
-{% else %}
-  <p>Your cart is empty.</p>
-  <p><a href="{% url 'index' %}">Browse Menu</a></p>
-{% endif %}
+    <p></p>
+    <a class="btn" href="{% url 'clear_cart' %}">Clear Cart</a>
+
+  {% else %}
+    <p>Your cart is empty.</p>
+    <a class="btn" href="{% url 'index' %}">Browse Menu</a>
+  {% endif %}
+</div>
 {% endblock %}

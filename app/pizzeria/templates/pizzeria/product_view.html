@@ -17,22 +17,26 @@
     {% csrf_token %}
 
     <h1 class="highlight">{{ item_name }}</h1>
+    <p style="
+    margin-top: 0px;
+    margin-bottom: 0px;"> {{ item.description }}</p>
 
     {% if item_category == 'pizza' and default_toppings %}
       <div class="form-section" style = "margin-bottom: 0px;">
         <h3>Default toppings:</h3>
         {% for topping in default_toppings %}
           <label style="display: inline;">
-            <input type="checkbox" name="default_toppings" value="{{ topping.id }}" checked disabled>
-            {{ topping.name }}{% if not forloop.last %}, {% endif %}
+            <input type="checkbox" name="default_toppings" value="{{ topping.id }}" checked>
+            {{ topping.name }}
           </label>
         {% endfor %}
       </div>
     {% endif %}
 
-    <div class="form-section">
-      <h3>Select size:</h3>
-      <div class="radio-inputs">
+    <div class="form-section" style = "margin-bottom: 0px;">
+      <h3 style="margin-bottom: 10px;">Select size:</h3>
+      <div class="radio-inputs" style="
+    height: 40px;">
         {% for item in items %}
           <div class="radio">
             <input 
@@ -44,8 +48,7 @@
               {% if forloop.first %}checked{% endif %}
             >
             <label for="size-{{ item.id }}" class="name">
-             <p> {{ item.size|capfirst }} </p>
-             <p>{{ item.price }} kr</p>
+             <p> {{ item.size|capfirst }} - {{ item.price }} kr</p>
             </label>
           </div>
         {% endfor %}
@@ -71,13 +74,14 @@
                       <img 
                         src="{% static 'pizzeria/images/'|add:topping.image_filename %}" 
                         alt="{{ topping.name }}" 
-                        style="width: 3rem; height: 3rem;" 
+                        style="width: 3rem; height: 3rem;"
                       >
                     {% endif %}
                   </span>
                   <span class="checkbox-label">
-                    {{ topping.name }} <span data-topping-id="{{ topping.id }}"></span>
+                    {{ topping.name }} 
                   </span>
+                  <span class="checkbox-label" data-topping-id="{{ topping.id }}"></span>
                 </span>
               </label>
             </div>
@@ -89,7 +93,8 @@
     <input type="hidden" name="item_name" value="{{ item_name }}">
     <input type="hidden" id="total-price" value="0">
 
-    <button type="submit" class="btn">Add to Cart for <span id="total-price-text"></span></button>
+    <button type="submit" class="btn" style="
+    margin-bottom: 30px;">Add to Cart for <span id="total-price-text"></span></button>
   </form>
 </div>
 

@@ -1,6 +1,22 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}{{ item_name }}{% endblock %}
+
+{% block content %}
+
+{% if messages %}
+  {% for message in messages %}
+    <div class="alert">{{ message }}</div>
+  {% endfor %}
+{% endif %}
+
 <h2>Login</h2>
 <form method="post">
   {% csrf_token %}
   {{ form.as_p }}
   <input type="submit" value="Log in">
 </form>
+
+<a href="{% url 'register' %}">Don't have an account?</a>
+
+{% endblock %}

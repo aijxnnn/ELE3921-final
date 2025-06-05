@@ -3,10 +3,13 @@ from django.contrib import messages
 from django.db.models import Min, Case, When, IntegerField
 from .models import MenuItem, PizzaTopping, Order, OrderItem, MenuItemSize
 import json
+from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse, QueryDict
 from django.utils.safestring import mark_safe
 from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm
 from django.contrib.auth import login
 from .forms import CreateUserForm, EditAccountForm
+from django.urls import reverse
 
 def index(request):
     all_items = MenuItem.objects.filter(category__in=['pizza', 'drink'])
@@ -57,6 +60,23 @@ def product_view(request, name):
     })
 
 def add_to_cart(request):
+
+    if not request.user.is_authenticated:
+        if request.method == "POST":
+            request.session['pending_cart'] = request.POST.dict()
+            messages.info(request, "You must be logged in to add items to your cart.")
+            return redirect(f"{reverse('login')}?next={reverse('add_to_cart')}")
+            
+        return redirect('index')
+
+    # if returning from login, and a user tries creating a cart
+    if request.method == "GET" and 'pending_cart' in request.session:
+        # convert stored data back into POST format
+        post_data = QueryDict('', mutable=True)
+        post_data.update(request.session.pop('pending_cart'))
+        request.POST = post_data
+        request.method = "POST" 
+
     if request.method == "POST":
         selected_size = request.POST.get('size')
         item = get_object_or_404(MenuItem, name=request.POST.get('item_name'))
@@ -200,6 +220,8 @@ def register(request):
         if form.is_valid():
             user = form.save()
             login(request, user)
+            if 'pending_cart' in request.session:
+                return redirect('add_to_cart')
             return redirect('index')
     else:
         form = CreateUserForm()

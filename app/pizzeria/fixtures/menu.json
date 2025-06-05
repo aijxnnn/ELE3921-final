@@ -31,6 +31,66 @@
     },
     {
       "model": "pizzeria.menuitem",
+      "pk": 10,
+      "fields": {
+        "name": "Burger",
+        "category": "pizza",
+        "description": "Juicy burger-inspired pizza with beef and cheddar.",
+        "image_filename": "burger.png"
+      }
+    },
+    {
+      "model": "pizzeria.menuitem",
+      "pk": 11,
+      "fields": {
+        "name": "Cheese Pizza",
+        "category": "pizza",
+        "description": "Loaded with rich cheese and a golden crust.",
+        "image_filename": "cheese.png"
+      }
+    },
+    {
+      "model": "pizzeria.menuitem",
+      "pk": 12,
+      "fields": {
+        "name": "Pickles",
+        "category": "topping",
+        "description": "Tangy sliced pickles.",
+        "image_filename": "pickles.png"
+      }
+    },
+    {
+      "model": "pizzeria.menuitem",
+      "pk": 13,
+      "fields": {
+        "name": "Corn",
+        "category": "topping",
+        "description": "Sweet corn kernels.",
+        "image_filename": "corn.png"
+      }
+    },
+    {
+      "model": "pizzeria.menuitem",
+      "pk": 14,
+      "fields": {
+        "name": "Jalapeño",
+        "category": "topping",
+        "description": "Spicy jalapeño pepper slices.",
+        "image_filename": "jalapeno_topping.png"
+      }
+    },
+    {
+      "model": "pizzeria.menuitem",
+      "pk": 15,
+      "fields": {
+        "name": "Ham",
+        "category": "topping",
+        "description": "Classic ham topping.",
+        "image_filename": "ham_topping.png"
+      }
+    },
+    {
+      "model": "pizzeria.menuitem",
       "pk": 4,
       "fields": {
         "name": "Cheese",
@@ -333,6 +393,87 @@
       }
     },
     {
+      "model": "pizzeria.menuitemsize",
+      "pk": 128,
+      "fields": {
+        "item": 11,
+        "size": "small",
+        "price": 99
+      }
+    },
+    {
+      "model": "pizzeria.menuitemsize",
+      "pk": 129,
+      "fields": {
+        "item": 11,
+        "size": "medium",
+        "price": 119
+      }
+    },
+    {
+      "model": "pizzeria.menuitemsize",
+      "pk": 130,
+      "fields": {
+        "item": 11,
+        "size": "large",
+        "price": 139
+      }
+    },
+    {
+      "model": "pizzeria.menuitemsize",
+      "pk": 131,
+      "fields": {
+        "item": 14,
+        "size": "small",
+        "price": 15
+      }
+    },
+    {
+      "model": "pizzeria.menuitemsize",
+      "pk": 132,
+      "fields": {
+        "item": 14,
+        "size": "medium",
+        "price": 20
+      }
+    },
+    {
+      "model": "pizzeria.menuitemsize",
+      "pk": 133,
+      "fields": {
+        "item": 14,
+        "size": "large",
+        "price": 25
+      }
+    },
+    {
+      "model": "pizzeria.menuitemsize",
+      "pk": 134,
+      "fields": {
+        "item": 15,
+        "size": "small",
+        "price": 15
+      }
+    },
+    {
+      "model": "pizzeria.menuitemsize",
+      "pk": 135,
+      "fields": {
+        "item": 15,
+        "size": "medium",
+        "price": 20
+      }
+    },
+    {
+      "model": "pizzeria.menuitemsize",
+      "pk": 136,
+      "fields": {
+        "item": 15,
+        "size": "large",
+        "price": 25
+      }
+    },
+    {
       "model": "pizzeria.pizzatopping",
       "pk": 201,
       "fields": {
@@ -385,6 +526,30 @@
       "pk": 207,
       "fields": {
         "pizza": 3,
+        "topping": 6
+      }
+    },
+    {
+      "model": "pizzeria.pizzatopping",
+      "pk": 208,
+      "fields": {
+        "pizza": 10,
+        "topping": 4
+      }
+    },
+    {
+      "model": "pizzeria.pizzatopping",
+      "pk": 209,
+      "fields": {
+        "pizza": 10,
+        "topping": 12
+      }
+    },
+    {
+      "model": "pizzeria.pizzatopping",
+      "pk": 210,
+      "fields": {
+        "pizza": 10,
         "topping": 6
       }
     }

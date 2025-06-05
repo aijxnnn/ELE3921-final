@@ -7,6 +7,8 @@ body {
     background-attachment: fixed; 
     padding-top: 70px;
     overflow-x: hidden;
+    margin-left: 80px;
+    margin-right: 80px;
   }
 
 .header {
@@ -39,15 +41,14 @@ body {
     align-items: center;
     gap: 30px;
   }
-.footer {
-    background-color: white;
-    display: flex;
-    border-top: 1px solid #ddd;
-    width: 100vw;
+  .footer {
+    background-color: rgb(255, 255, 255);
+    color: #484848;
+    padding: 20px;
     box-sizing: border-box;
-    bottom: 0;
-    left: 0;
-}
+    
+  }
+  
 .btn {
     background-color: rgb(255, 106, 0);
     color: white;
@@ -150,13 +151,18 @@ body {
   box-shadow: 0 2px 4px rgba(0,0,0,0.05);
   max-width: 500px;
   margin: 10px auto;
+  justify-content: space-between;
+  height: 100%;
+  overflow: hidden;
+  padding-bottom: 1rem;
 }
 
 .form-group,
 .form-section {
-  margin-bottom: 10px;
   margin-right: 10px;
   margin-left: 10px;
+  height: auto;
+  margin-bottom: 0
 }
 
 .form-group label,
@@ -168,14 +174,25 @@ body {
   color: #333;
 }
 
-.topping-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-  column-gap: 20px;
-  row-gap: 15px;
+.product-form .form-section:last-of-type {
+    display: block;
+    margin-bottom: 0;  
+  }
   
-}
+ 
 
+  .topping-grid {
+    flex: 1;
+    overflow-y: auto;
+    max-height: 200px; 
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 12px;
+    padding-right: 6px;
+  }
+  button.btn {
+    margin-top: auto;
+  }
 .checkbox-wrapper-16 *,
 .checkbox-wrapper-16 *:after,
 .checkbox-wrapper-16 *:before {
@@ -293,6 +310,9 @@ text-align: center;
   padding: 0.25rem;
   width: 100%; 
   font-size: 14px;
+  gap: 10px;
+  align-items: center;
+  height: 40px;
 }
 
 .radio-inputs .radio {
@@ -319,6 +339,15 @@ text-align: center;
 .radio-inputs .radio input:checked + .name {
   background-color: #fff;
   font-weight: 600;
+  height: 40px;
+  position: relative;
+  display: flex;
+  flex-wrap: nowrap;
+  border-radius: 0.5rem;
+  box-sizing: border-box;
+  box-shadow: 0 0 0px 1px rgba(0, 0, 0, 0.06);
+  padding: 0.25rem;
+  width: 100%; 
 }
 
 .product-modal {
@@ -366,7 +395,6 @@ text-align: center;
     display: flex;
     flex-direction: column;               
     overflow: hidden;
-    flex:1;
   }
 
   .product-form .form-section:nth-of-type(2) .topping-grid {
@@ -424,3 +452,142 @@ text-align: center;
     font-weight: 500;
     color: #444;
   }
+
+  /* cart */
+
+  .cart-item {
+    display: grid;
+    grid-template-columns: 80px 1fr auto;
+    gap: 1rem;
+    align-items: start;
+    background: #FFF8F2;
+    border: 1px solid #FFDEB3;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  }
+
+  .cart-item-img {
+    width: 80px;
+    height: 80px;
+    flex-shrink: 0;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .cart-item-img img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    border-radius: 4px;
+  }
+  .cart-item-info h3 {
+    margin: 0 0 0.5rem;
+    font-size: 1.25rem;
+    color: #FF6900;
+  }
+  .cart-item-info p {
+    margin: 0.25rem 0;
+    color: #444;
+  }
+  .cart-item-info ul {
+    margin: 0.5rem 0 0.5rem 1.2rem;
+    color: #444;
+  }
+
+  .remove-btn {
+    background: transparent;
+    border: 1px solid #CC0000;
+    color: #CC0000;
+    padding: 0.4rem 0.8rem;
+    font-size: 0.9rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+  }
+  .remove-btn:hover {
+    background: #CC0000;
+    color: white;
+  }
+
+  /* msg */
+  .message-popup-container {
+    position: fixed;
+    top: 100px;
+    right: 20px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .msg-card {
+    width: 330px;
+    height: 80px;
+    border-radius: 8px;
+    box-sizing: border-box;
+    padding: 10px 15px;
+    background-color: #ffffff;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    gap: 15px;
+  }
+  .wave {
+    position: absolute;
+    transform: rotate(90deg);
+    left: -31px;
+    top: 32px;
+    width: 80px;
+    fill: #04e4003a;
+  }
+  .icon-container {
+    width: 35px;
+    height: 35px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #04e40048;
+    border-radius: 50%;
+    flex-shrink: 0;
+    overflow: hidden;
+  }
+  
+  .icon {
+    width: 18px;
+    height: 18px;
+    object-fit: contain;
+  }
+  .message-text-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    flex-grow: 1;
+  }
+  .message-text,
+  .sub-text {
+    margin: 0;
+    cursor: default;
+  }
+  .message-text {
+    color: #269b24;
+    font-size: 17px;
+    font-weight: 700;
+  }
+  .sub-text {
+    font-size: 14px;
+    color: #555;
+  }
+  .cross-icon {
+    width: 18px;
+    height: 18px;
+    color: #555;
+    cursor: pointer;
+  } 
