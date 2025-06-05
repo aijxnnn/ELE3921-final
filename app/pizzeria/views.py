@@ -68,7 +68,6 @@ def add_to_cart(request):
             request.session['pending_cart'] = request.POST.dict()
             messages.info(request, "You must be logged in to add items to your cart.")
             return redirect(f"{reverse('login')}?next={reverse('add_to_cart')}")
-            
         return redirect('index')
 
     # if returning from login, and a user tries creating a cart
@@ -81,7 +80,8 @@ def add_to_cart(request):
 
     if request.method == "POST":
         selected_size = request.POST.get('size')
-        item = get_object_or_404(MenuItem, name=request.POST.get('item_name'))
+        category = request.POST.get('item_category')
+        item = get_object_or_404(MenuItem, name=request.POST.get('item_name'), category=category)
         item_variant = MenuItemSize.objects.filter(item=item, size=selected_size).first()
 
         selected_extra_toppings = list(map(int, request.POST.getlist('extra_toppings')))
@@ -160,7 +160,6 @@ def view_cart(request):
         'total': total }
         )
 
-#TODO combine clear cart and remove_item? 
 def clear_cart(request):
     request.session['cart'] = []
     request.session.modified = True
